@@ -364,7 +364,7 @@ static const char *pdlua_reader
     t_pdlua_readerdata  *r = rr;
     ssize_t             s;
     PDLUA_DEBUG("pdlua_reader: fd is %d", r->fd);
-    s = read(r->fd, r->buffer, MAXPDSTRING-2);
+    s = sys_fs_read(r->fd, r->buffer, MAXPDSTRING-2);
     PDLUA_DEBUG("pdlua_reader: s is %ld", s);////////
     if (s <= 0)
     {
@@ -604,6 +604,11 @@ static t_pdlua *pdlua_new
     t_atom      *argv /**< The construction message atoms. */
 )
 {
+    if (__L() == NULL)
+    {
+        initialise_lua_state();
+    }
+
     int i;
     PDLUA_DEBUG("pdlua_new: s->s_name is %s", s->s_name);
     for (i = 0; i < argc; ++i)
@@ -3103,7 +3108,7 @@ void pdlua_setup(void)
         strcpy(pdlua_cwd, ".");
     snprintf(pd_lua_path, MAXPDSTRING-1, "%s/pd.lua", pdlua_datadir); /* the full path to pd.lua */
     PDLUA_DEBUG("pd_lua_path %s", pd_lua_path);
-    fd = open(pd_lua_path, O_RDONLY);
+    fd = sys_fs_open(pd_lua_path, 0, O_RDONLY);
 /*    fd = canvas_open(canvas_getcurrent(), "pd", ".lua", buf, &ptr, MAXPDSTRING, 1);  looks all over and rarely succeeds */
     PDLUA_DEBUG ("pd.lua loaded from %s", pd_lua_path);
     PDLUA_DEBUG("pdlua canvas_open done fd = %d", fd);
@@ -3146,7 +3151,7 @@ void pdlua_setup(void)
                 /* since Pd>=0.47, Pd tries the loaders for each path */
                 sys_register_loader((loader_t)pdlua_loader_pathwise);
         }
-        close(fd);
+        sys_fs_close(fd);
     }
     else
     {
