@@ -37,14 +37,14 @@
     #ifndef PATH_MAX
         #define PATH_MAX 1024 /* same with Mac OS X's syslimits.h */
     #endif
-    #define read _read
-    #define close _close
     #define ssize_t int
     #define snprintf _snprintf
 #else
     #include <sys/fcntl.h> // for open
     #include <unistd.h>
 #endif
+#define read sys_fs_read
+#define close sys_close
 /* we use Lua */
 #include <lua.h>
 #include <lauxlib.h>
