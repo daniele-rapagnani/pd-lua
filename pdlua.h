@@ -79,5 +79,10 @@ typedef struct pdlua
 
 lua_State* __L();
 
+#ifdef _WIN32
+#ifndef PDLUA_BUILD
+__declspec(dllexport)
+#endif
+#endif
 void pdlua_instance_setup();
 
