@@ -2874,6 +2874,9 @@ static int pdlua_loader_wrappath
     const char* basenamep = basename(name);
     int load_name_save = 0, load_path_save;
     const int is_loadname = basenamep > name;
+    if (__L() == NULL) {
+        initialise_lua_state();
+    }
     lua_getglobal(__L(), "pd");
     if (is_loadname)
     {
@@ -2975,10 +2978,10 @@ static int pdlua_loader_pathwise
 
 /** Start the Lua runtime and register our loader hook. */
 #ifdef _WIN32
-__declspec(dllexport)
+  #ifndef PDLUA_BUILD
+    __declspec(dllexport)
+  #endif
 #endif
-
-
 void pdlua_instance_setup()
 {
 #if PDINSTANCE

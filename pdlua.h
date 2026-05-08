@@ -17,6 +17,8 @@
 
 #include "m_pd.h"
 
+typedef struct lua_State lua_State;
+
 typedef enum {SCALE, TRANSLATE} transform_type;
 
 typedef struct _gfx_transform
@@ -76,3 +78,6 @@ typedef struct pdlua
 } t_pdlua;
 
 lua_State* __L();
+
+void pdlua_instance_setup();
+
